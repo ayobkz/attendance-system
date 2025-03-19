@@ -1,0 +1,20 @@
+<nav>
+    <div class="nav-wrapper">
+        <a href="{% url 'home' %}" class="brand-logo">Система посещаемости</a>
+        <ul class="right">
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'home' %}">Главная</a></li>
+                <li><a href="{% url 'profile' %}">Профиль</a></li>
+                {% if user.profile.role == 'teacher' %}
+                    <li><a href="{% url 'teacher_courses' %}">Мои курсы</a></li>
+                    <li><a href="{% url 'group_list' %}">Мои группы</a></li>
+                    <li><a href="{% url 'create_lesson' %}">Создать занятие</a></li>
+                {% endif %}
+                <li><a href="{% url 'logout' %}">Выйти</a></li>
+            {% else %}
+                <li><a href="{% url 'login' %}">Войти</a></li>
+                <li><a href="{% url 'register' %}">Регистрация</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</nav> 

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="jumbotron p-5 mb-4 bg-light rounded-3">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Система контроля посещаемости</h1>
+        <p class="col-md-8 fs-4">
+            Добро пожаловать в систему контроля посещаемости студентов с использованием QR-кодов!
+        </p>
+        {% if not user.is_authenticated %}
+        <p>
+            <a class="btn btn-primary btn-lg" href="{% url 'register' %}">Зарегистрироваться</a>
+            <a class="btn btn-outline-secondary btn-lg" href="{% url 'login' %}">Войти</a>
+        </p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row align-items-md-stretch">
+    <div class="col-md-6">
+        <div class="h-100 p-5 text-white bg-dark rounded-3">
+            <h2>Для студентов</h2>
+            <p>Получайте информацию о своем расписании и отмечайтесь на занятиях с помощью сканирования QR-кода.</p>
+            {% if user.is_authenticated and user.profile.role == 'student' %}
+            <a class="btn btn-outline-light" href="{% url 'student_attendance' %}">Моя посещаемость</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="h-100 p-5 bg-light border rounded-3">
+            <h2>Для преподавателей</h2>
+            <p>Создавайте занятия, генерируйте QR-коды и отслеживайте посещаемость студентов.</p>
+            {% if user.is_authenticated and user.profile.role == 'teacher' %}
+            <a class="btn btn-outline-secondary" href="{% url 'teacher_courses' %}">Мои курсы</a>
+            <a class="btn btn-outline-primary" href="{% url 'create_lesson' %}">Создать занятие</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

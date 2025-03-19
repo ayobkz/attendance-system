@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header">
+        <h2>{{ lesson.course.name }}</h2>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-8">
+                <p><strong>Группа:</strong> {{ lesson.group.name }}</p>
+                <p><strong>День недели:</strong> {{ lesson.get_day_of_week_display }}</p>
+                <p><strong>Время:</strong> {{ lesson.start_time }} - {{ lesson.end_time }}</p>
+                <p><strong>Аудитория:</strong> {{ lesson.classroom }}</p>
+            </div>
+            <div class="col-md-4">
+                {% if lesson.qr_code %}
+                    <h4>QR-код занятия:</h4>
+                    <img src="{{ lesson.qr_code.url }}" alt="QR-код" class="img-fluid">
+                    <a href="{% url 'generate_qr' lesson.id %}" class="btn btn-warning mt-2">Обновить QR-код</a>
+                {% else %}
+                    <a href="{% url 'generate_qr' lesson.id %}" class="btn btn-primary">Сгенерировать QR-код</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3>Посещаемость</h3>
+    </div>
+    <div class="card-body">
+        {% if attendances %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Студент</th>
+                            <th>Дата</th>
+                            <th>Время</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for attendance in attendances %}
+                            <tr>
+                                <td>{{ attendance.student.first_name }} {{ attendance.student.last_name }}</td>
+                                <td>{{ attendance.date }}</td>
+                                <td>{{ attendance.time }}</td>
+                                <td>
+                                    {% if attendance.present %}
+                                        <span class="badge bg-success">Присутствовал</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Отсутствовал</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>Пока нет данных о посещении этого занятия.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+# templates/attendance/create_lesson.

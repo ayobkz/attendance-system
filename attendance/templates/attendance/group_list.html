@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Мои группы</h2>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if groups %}
+        <div class="groups-list">
+            {% for group in groups %}
+                <div class="group-card">
+                    <h3>{{ group.name }}</h3>
+                    <p>Количество студентов: {{ group.students.count }}</p>
+                    <a href="{% url 'group_detail' group.id %}" class="btn btn-primary">Подробнее</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>У вас пока нет прикрепленных групп</p>
+    {% endif %}
+</div>
+{% endblock %} 

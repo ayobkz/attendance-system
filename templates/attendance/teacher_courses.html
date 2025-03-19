@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Мои курсы</h2>
+    </div>
+    <div class="card-body">
+        {% if courses %}
+            <div class="row">
+                {% for course in courses %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ course.name }}</h5>
+                                <p class="card-text">{{ course.description|default:"Нет описания" }}</p>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" 
+                                        data-bs-target="#lessons-{{ course.id }}" aria-expanded="false">
+                                    Показать занятия
+                                </button>
+                            </div>
+                            <div class="collapse mt-3" id="lessons-{{ course.id }}">
+                                <div class="card card-body">
+                                    {% if course.lessons.all %}
+                                        <ul class="list-group list-group-flush">
+                                            {% for lesson in course.lessons.all %}
+                                                <li class="list-group-item">
+                                                    <strong>{{ lesson.get_day_of_week_display }}</strong>: 
+                                                    {{ lesson.start_time }} - {{ lesson.end_time }}, 
+                                                    {{ lesson.classroom }}, 
+                                                    Группа: {{ lesson.group.name }}
+                                                    <div class="mt-2">
+                                                        <a href="{% url 'lesson_detail' lesson.id %}" class="btn btn-sm btn-outline-primary">Подробнее</a>
+                                                        <a href="{% url 'generate_qr' lesson.id %}" class="btn btn-sm btn-outline-success">QR-код</a>
+                                                    </div>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% else %}
+                                        <p>Нет занятий по этому курсу.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>У вас пока нет курсов.</p>
+        {% endif %}
+        <a href="{% url 'create_lesson' %}" class="btn btn-success mt-3">Создать занятие</a>
+    </div>
+</div>
+{% endblock %}

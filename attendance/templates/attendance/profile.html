@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="profile-container">
+    {% if profile_empty %}
+        <div class="alert alert-info">
+            {{ message }}
+        </div>
+    {% else %}
+        {% if student_info %}
+            <h2>Профиль студента</h2>
+            <p>ФИО: {{ student_info.full_name }}</p>
+            <p>Группа: {{ student_info.group }}</p>
+            <p>Студенческий билет: {{ student_info.student_id }}</p>
+        {% elif teacher_info %}
+            <h2>Профиль преподавателя</h2>
+            <p>ФИО: {{ teacher_info.full_name }}</p>
+            <p>Кафедра: {{ teacher_info.department }}</p>
+            
+            <h3>Мои группы</h3>
+            {% if teacher_groups %}
+                <div class="groups-list">
+                    {% for group in teacher_groups %}
+                        <div class="group-item">
+                            <a href="{% url 'group_detail' group.id %}">{{ group.name }}</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>У вас пока нет прикрепленных групп</p>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %} 

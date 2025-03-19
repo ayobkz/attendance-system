@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Группа: {{ group.name }}</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="add-student-form">
+        <h3>Добавить студента</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="student_id" placeholder="ID студента" required>
+            <input type="hidden" name="action" value="add">
+            <button type="submit" class="btn btn-success">Добавить</button>
+        </form>
+    </div>
+
+    <h3>Список студентов:</h3>
+    {% if students %}
+        <div class="students-list">
+            {% for student in students %}
+                <div class="student-card">
+                    <p>{{ student.get_full_name|default:student.username }}</p>
+                    <p>ID: {{ student.profile.student_id }}</p>
+                    <form method="POST" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="student_id" value="{{ student.id }}">
+                        <input type="hidden" name="action" value="remove">
+                        <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>В группе пока нет студентов</p>
+    {% endif %}
+
+    <a href="{% url 'group_list' %}" class="btn btn-secondary mt-3">Назад к списку групп</a>
+</div>
+{% endblock %} 
